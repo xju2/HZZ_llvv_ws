@@ -19,9 +19,6 @@ class llvv_ws:
     def __init__(self, opt):
         print "llvv_ws is created"
 
-        # load template
-        self.template = script_dir+'/data/config_LWA_template.ini'
-
         self.opt = opt
         self.bsub_handle = BsubHandle()
         self.bsub_handle.no_submit = not self.opt.submit
@@ -31,23 +28,35 @@ class llvv_ws:
         self.exe_limit = self.code_dir+"scripts/run_limit.sh"
 
     def get_config_name(self):
-        return "HZZ_STXS_llvv_mH{}_wH{}.ini".format(self.mass, self.width)
+        if hasattr(self, 'width'):
+            return "HZZ_STXS_llvv_mH{}_wH{}.ini".format(self.mass, self.width)
+        else:
+            return "HZZ_STXS_llvv_mH.ini".format(self.mass)
 
     def get_ws_name(self):
-        return 'combined_mH{}_wH{}.root'.format(self.mass, self.width)
+        if hasattr(self, 'width'):
+            return 'combined_mH{}_wH{}.root'.format(self.mass, self.width)
+        else:
+            return 'combined_mH{}.root'.format(self.mass)
 
     def check_input(self):
         pass
 
-    def process_individual(self, mass, width):
+    def process_LWA(self, mass, width):
         print "producing mH {} and wH {}".format(mass, width)
         self.mass = mass
         self.width = width
-
-        pp.config_files(
+        pp.config_files_LWA(
             self.template, mass, width,
             self.get_config_name()
         )
+        self.make_ws()
+        self.submit_limit()
+
+    def process_NWA(self, mass):
+        print "producing mH {}".format(mass)
+        self.mass = mass
+        pp.config_files_NWA(mass, self.get_config_name())
         self.make_ws()
         self.submit_limit()
 
@@ -59,7 +68,13 @@ class llvv_ws:
         exe = ['mainCombiner', self.get_config_name()]
         print exe
         output = subprocess.check_output(exe)
-        with open("log.make.mH{}.wH{}".format(self.mass, self.width), 'w') as f:
+
+        if hasattr(self, 'width'):
+            log_name = "log.make.mH{}.wH{}".format(self.mass, self.width)
+        else:
+            log_name = "log.make.mH{}".format(self.mass)
+
+        with open(log_name, 'w') as f:
             f.write(output)
 
         mv_str = ['mv', 'combined.root', self.get_ws_name()]
@@ -72,10 +87,14 @@ class llvv_ws:
         if not os.path.exists(out_dir):
             os.mkdir(out_dir)
 
+        if hasattr(self, 'width'):
+            fix_str = 'mH={},gamma={}'.format(self.mass, self.width)
+        else:
+            fix_str = 'mH={}'.format(self.mass)
+
         run_cmd = " ".join(
             [self.exe_limit, ws_dir+"/"+self.get_ws_name(), 'combined', 'mu', 'obsData',
-             'mH={},gamma={}'.format(self.mass, self.width), 'limit', 'obs,exp',
-             out_dir, '1', '0:1']
+             fix_str, 'limit', 'obs,exp', out_dir, '1', '0:1']
             )
         self.bsub_handle.submit(run_cmd)
 
@@ -85,10 +104,13 @@ if __name__ == "__main__":
     version="%prog 1.0"
     parser = OptionParser(usage=usage, description="make workspaces", version=version)
     parser.add_option('--submit', default=False, action='store_true', help="If submit Limit jobs")
+    parser.add_option('--hypo', default="LWA", help="which hypothesis, LWA or NWA")
     (options,args) = parser.parse_args()
 
     handle = llvv_ws(options)
     mass = int(args[0])
-    width = int(args[1])
-
-    handle.process_individual(mass, width)
+    if options.hypo == "LWA":
+        width = int(args[1])
+        handle.process_LWA(mass, width)
+    else:
+        handle.process_NWA(mass)

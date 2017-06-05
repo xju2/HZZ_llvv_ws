@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import ROOT
+import os
+
+script_dir = os.path.join(os.path.dirname(os.path.abspath(os.path.realpath(__file__))), '..')
 
 def make_yield_input(file_name, out_name, prefix_name):
     r"""take a input root file and extra the yields from the histograms
@@ -46,9 +49,12 @@ def get_coeff_info(mass_list, width_list, coeff_info_name="coefInfo.ini"):
     with open(coeff_info_name, 'w') as f:
         f.write(out_text)
 
-def config_files(template, mass, width, out_name):
+template_LWA = script_dir+'/data/config_LWA_template.ini'
+template_NWA = script_dir+'/data/config_NWA_template.ini'
+
+def config_files_LWA(mass, width, out_name):
     out_text = ""
-    with open(template, 'r') as f:
+    with open(template_LWA, 'r') as f:
         filedata = f.read()
 
     filedata = filedata.replace("SECTIONAME", 'sbiFormula_mH{}_w{}'.format(mass, width))
@@ -57,6 +63,17 @@ def config_files(template, mass, width, out_name):
     with open(out_name, 'w') as f:
         f.write(filedata)
 
+def config_files_NWA(mass, out_name):
+    out_text = ""
+    with open(template_NWA, 'r') as f:
+        filedata = f.read()
+
+    filedata = filedata.replace('EXPECTED_GGF', "Ae_ggH{}".format(mass))
+    filedata = filedata.replace('EXPECTED_VBF', "Ae_VBFH{}".format(mass))
+    filedata = filedata.replace('MASS', "{}".format(mass))
+
+    with open(out_name, 'w') as f:
+        f.write(filedata)
 
 if __name__ == "__main__":
     widths = [1, 5, 10, 15]
