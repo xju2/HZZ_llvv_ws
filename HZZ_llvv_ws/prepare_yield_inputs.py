@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#!/usr/bin/env python
 
 import ROOT
 import os
@@ -49,6 +50,7 @@ def get_coeff_info(mass_list, width_list, coeff_info_name="coefInfo.ini"):
     with open(coeff_info_name, 'w') as f:
         f.write(out_text)
 
+# prepare the configuration files for NWA and LWA.
 template_LWA = script_dir+'/data/config_LWA_template.ini'
 template_NWA = script_dir+'/data/config_NWA_template.ini'
 

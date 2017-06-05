@@ -37,7 +37,7 @@ mass_list = [400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1
 # fin_temp.Close()
 
 #hist_temp = ROOT.TH1F("temp", "template", 30, 0., 1500.)
-xbins = [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 700, 800, 950, 1500]
+xbins = [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 800, 950, 1500]
 hist_temp = ROOT.TH1F("temp", "template", len(xbins)-1, array.array('f', xbins))
 
 fin = ROOT.TFile.Open(f1_name)

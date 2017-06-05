@@ -5,6 +5,7 @@ for mass in $masses
 do
     echo $mass
     python main.py $mass --submit --hypo NWA
+    #python main.py $mass --hypo NWA
 done
 
 #python plot_limit.py limits_with_interference.txt,limits_no_interference.txt withInt,noInt --prod "pp#rightarrowH" --decay "llll/ll#nu#nu" --xsInput xs.txt
