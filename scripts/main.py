@@ -39,17 +39,20 @@ class llvv_ws:
         else:
             return 'combined_mH{}.root'.format(self.mass)
 
-    def check_input(self):
+    def check_input_LWA(self):
+        if not os.path.exists('coefInfo.ini'):
+            widths = [1, 5, 10, 15]
+            mass_list = [400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1100, 1200]
+            pp.get_coeff_info(mass_list, widths)
+
         pass
 
     def process_LWA(self, mass, width):
         print "producing mH {} and wH {}".format(mass, width)
         self.mass = mass
         self.width = width
-        pp.config_files_LWA(
-            self.template, mass, width,
-            self.get_config_name()
-        )
+        self.check_input_LWA()
+        pp.config_files_LWA(mass, width, self.get_config_name())
         self.make_ws()
         self.submit_limit()
 
