@@ -8,7 +8,7 @@ if not hasattr(ROOT, 'getHiggsXS'):
     ROOT.gROOT.LoadMacro(os.path.dirname(os.path.abspath(os.path.realpath(__file__)))+"/cross_section.cxx")
 
 def signal_xs(mass, width):
-    r"""return inclusive cross section (gg->H) in unit of fb
+    r"""return inclusive cross section (gg->H->ZZ->4l) in unit of fb
     """
     return ROOT.getHiggsXS(mass, width)
 
