@@ -5,8 +5,8 @@
     POINames="XS_ggF">
 
     <Item Name="XS_ggF[1.0,0,200]"/>
-    <Item Name="expr::XS_ggF_BR_4l('0.004520*@0', XS_ggF)"/>
-    <Item Name="expr::XS_ggF_BR_llvv('@0/LLVV_INJECT_XS', XS_ggF)"/>
+    <Item Name="expr::XS_ggF_BR_4l('0.004520*@0*1000', XS_ggF)"/>
+    <Item Name="expr::XS_ggF_BR_llvv('0.04044*@0/LLVV_INJECT_XS', XS_ggF)"/>
     <Item Name= "EDIT::NEWPDF(OLDPDF,mu_llll=XS_ggF_BR_4l)" />
     <Item Name= "EDIT::NEWPDF(OLDPDF,mu_llvv=XS_ggF_BR_llvv)" />
 </Organization>

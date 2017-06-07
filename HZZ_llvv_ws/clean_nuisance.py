@@ -61,7 +61,7 @@ def variation(hist):
         if value != 0:
             vary += (value - 1)**2
 
-    return math.sqrt(vary)
+    return math.sqrt(vary)/total
 
 def prune_shape_sys(file_name):
     # loop all histograms in the file.
@@ -74,6 +74,8 @@ def prune_shape_sys(file_name):
         hist = key.ReadObj()
         if variation(hist) > 0.01:
             good_hists.append(hist)
+        else:
+            print hist.GetName(),"removed, in", file_name
         key = next()
 
     fout = ROOT.TFile.Open("out_temp.root", 'recreate')
