@@ -52,7 +52,10 @@ class llvv_ws:
         self.mass = mass
         self.width = width
         self.check_input_LWA()
-        pp.config_files_LWA(mass, width, self.get_config_name())
+        if self.opt.noInt:
+            pp.config_files_LWA_noInt(mass, width, self.get_config_name())
+        else:
+            pp.config_files_LWA(mass, width, self.get_config_name())
         self.make_ws()
         self.submit_limit()
 
@@ -111,29 +114,19 @@ class llvv_ws:
             out_dir = ws_dir+'/VBF_Limits'
             self.bsub_handle.submit(self.get_limit_cmd(ws_dir, poi_name, fix_str, out_dir, "0:0"))
 
-    def combine(self, mass, width, ):
-        self.mass = mass
-        self.width = width
-        exe_comb = ['manager', '-w', 'combine', '-x', '']
-
 if __name__ == "__main__":
     usage = "%prog mass width"
     version="%prog 1.0"
     parser = OptionParser(usage=usage, description="make workspaces", version=version)
     parser.add_option('--submit', default=False, action='store_true', help="If submit Limit jobs")
     parser.add_option('--hypo', default="LWA", help="which hypothesis, LWA or NWA")
-    parser.add_option('--combine', default=False, action='store_true', help="combination")
+    parser.add_option('--noInt', default=False, action='store_true', help="no interference")
     (options,args) = parser.parse_args()
 
     handle = llvv_ws(options)
     mass = int(args[0])
     if options.hypo == "LWA":
         width = int(args[1])
-        if options.combine:
-            handle.llll_input = ''
-            handle.llvv_input = ''
-            handle.combination(mass, width)
-        else:
-            handle.process_LWA(mass, width)
+        handle.process_LWA(mass, width)
     else:
         handle.process_NWA(mass)

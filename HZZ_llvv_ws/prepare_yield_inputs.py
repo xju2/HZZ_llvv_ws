@@ -53,6 +53,7 @@ def get_coeff_info(mass_list, width_list, coeff_info_name="coefInfo.ini"):
 # prepare the configuration files for NWA and LWA.
 template_LWA = script_dir+'/data/config_LWA_template.ini'
 template_NWA = script_dir+'/data/config_NWA_template.ini'
+template_LWA_noInt = script_dir+'/data/config_LWA_template_noInt.ini'
 
 def config_files_LWA(mass, width, out_name):
     out_text = ""
@@ -60,6 +61,17 @@ def config_files_LWA(mass, width, out_name):
         filedata = f.read()
 
     filedata = filedata.replace("SECTIONAME", 'sbiFormula_mH{}_w{}'.format(mass, width))
+    filedata = filedata.replace("INPUTNAME", 'ggH{}_wH{}'.format(mass, width))
+
+    with open(out_name, 'w') as f:
+        f.write(filedata)
+
+def config_files_LWA_noInt(mass, width, out_name):
+    out_text = ""
+    with open(template_LWA_noInt, 'r') as f:
+        filedata = f.read()
+
+    filedata = filedata.replace("YIELDS", 'n_signal,normed_yields_ggH{}_wH{}.txt'.format(mass, width))
     filedata = filedata.replace("INPUTNAME", 'ggH{}_wH{}'.format(mass, width))
 
     with open(out_name, 'w') as f:

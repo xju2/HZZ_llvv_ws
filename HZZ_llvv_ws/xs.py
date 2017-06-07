@@ -7,9 +7,13 @@ import sys
 if not hasattr(ROOT, 'getHiggsXS'):
     ROOT.gROOT.LoadMacro(os.path.dirname(os.path.abspath(os.path.realpath(__file__)))+"/cross_section.cxx")
 
-def signal_xs(mass, width):
+def signal_xs(mass, width_frac):
     r"""return inclusive cross section (gg->H->ZZ->4l) in unit of fb
+    parameters
+    ----------
+    width_frac: is the fraction of the width in pecentage.
     """
+    width = mass*width_frac/100.
     return ROOT.getHiggsXS(mass, width)
 
 if __name__ == "__main__":

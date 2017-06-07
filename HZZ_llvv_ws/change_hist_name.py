@@ -45,6 +45,10 @@ def add_more(file_name, outname):
     fin.Close()
 
 def new_hist(old_hist, hist_name):
+    r"""create a new histogram based on the input histogram.
+    Old histograms with various binning are converted to
+    new histograms with equal binning
+    """
     h_temp = ROOT.TH1F(hist_name, hist_name, 30, 0, 1500)
     f_ref = ROOT.TFile.Open('/afs/cern.ch/user/m/mpetrov/public/Combination_llvv/20170605_inputs_same_binning/qqZZ.root')
     h_ref = f_ref.Get('mT_ee')
@@ -109,7 +113,7 @@ def make_same_binning():
     change_binning('bak_nominal_shape/pdf_Zjets_all.root', 'pdf_Zjets_all.root')
 
 if __name__ == "__main__":
-    #for file_name in glob.glob("ggH*root"):
-    #    print file_name
-    #    change(file_name)
-    make_same_binning()
+    for file_name in glob.glob("ggH*root"):
+        print file_name
+        change(file_name)
+    #make_same_binning()

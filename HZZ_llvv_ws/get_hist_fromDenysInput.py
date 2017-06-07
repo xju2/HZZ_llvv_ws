@@ -72,6 +72,8 @@ for mass in mass_list:
                 tree.Draw("mT_ZZ>>"+h_sig.GetName(), weight)
                 h_sig.Scale(1000)
                 h_sig.Write()
+                h_sig_clone = h_sig.Clone("mT-Nominal-"+chan)
+                h_sig_clone.Write()
 
             # interference of higgs and Higgs
             int_hH_name = "mT_"+chan+"_hH"
