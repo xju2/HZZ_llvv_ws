@@ -40,11 +40,13 @@ def plot_acceptance(width):
     gr_ee = maker.maker.graph('gr_ee', mass_list, acc_ee_list)
     gr_mm = maker.maker.graph('gr_mm', mass_list, acc_mm_list)
     gr_ee.SetLineColor(2)
-    gr_ee.GetXaxis().SetTitle("mH")
+
     gr_mm.SetLineColor(4)
     gr_mm.SetMarkerColor(4)
 
     gr_mm.Draw("AL")
+    gr_mm.GetXaxis().SetTitle("mH")
+    gr_mm.GetYaxis().SetTitle("Acceptance*Efficiency")
     gr_ee.Draw("L SAME")
     canvas.Draw()
     canvas.SaveAs("acceptance_wH{}.pdf".format(width))
