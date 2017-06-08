@@ -49,7 +49,6 @@ class Main:
 
         self.mass = mass
         self.width = width
-        config_name = self.ws_handler.get_workspace_config(mass, width, not self.opt.noInt)
 
         self.make_ws(config_name)
         self.submit_limit()
@@ -66,6 +65,7 @@ class Main:
             print self.get_ws_name(),"is there"
             return
 
+        config_name = self.ws_handler.get_workspace_config(self.mass, self.width, not self.opt.noInt)
         exe = ['mainCombiner', config_name]
         print exe
         output = subprocess.check_output(exe)

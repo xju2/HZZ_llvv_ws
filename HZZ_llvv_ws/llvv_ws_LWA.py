@@ -51,9 +51,12 @@ class llvv_ws_LWA:
                 self.make_coeff()
             else:
                 print self.get_coeff_name(),"is there"
-            self.config_files_LWA()
+
+            if not os.path.exists(self.get_config_name()):
+                self.config_files_LWA()
         else:
-            self.config_files_LWA_noInt()
+            if not os.path.exists(self.get_config_name()):
+                self.config_files_LWA_noInt()
 
         return self.get_config_name()
 
