@@ -1,16 +1,22 @@
 #!/bin/bash
 
-#widths="1 5 10 15"
-#masses="400 450 500 550 600 650 700 750 800 850 900 950 1000 1100 1200"
-widths="1"
-masses="400 500 600 700 800 900 1000 1200"
-for mass in $masses
-do
-    for width in $widths
+function do_test(){
+    python main.py 410 1 --submit
+}
+
+function run_all(){
+    widths="1 5 10 15"
+    for ((mass=400; mass <=1200; mass+=10))
     do
-        echo $mass, $width
-        python main.py $mass $width --submit
+        for width in $widths
+        do
+            echo $mass, $width
+            python main.py $mass $width --submit
+        done
     done
-done
+}
+
+#do_test
+run_all
 
 #python plot_limit.py limits_with_interference.txt,limits_no_interference.txt withInt,noInt --prod "pp#rightarrowH" --decay "llll/ll#nu#nu" --xsInput xs.txt

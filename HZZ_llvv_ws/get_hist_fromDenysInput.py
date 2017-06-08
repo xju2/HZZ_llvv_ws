@@ -4,7 +4,6 @@ import sys
 
 
 sys.path.insert(0, '/afs/cern.ch/user/x/xju/work/h4l/h4lcode/root_plot_utils')
-
 from root_plot_utils.ploter import Ploter
 
 import ROOT
@@ -12,40 +11,32 @@ ROOT.gROOT.SetBatch()
 
 import array
 
-ps = Ploter()
-ps.add_ratio = False
+def get_hist(mass_list, widths):
+    ps = Ploter()
+    ps.add_ratio = False
 
-#f1_name = "/afs/cern.ch/work/d/ddenysiu/public/tmp/Int_llvv/test_H_plus_hH.root"
-f1_name = "/afs/cern.ch/work/d/ddenysiu/public/forXY/Int_llvv/test_llvv_LWA.root"
-ch_names = {
-    "ggF_eevv": 0,
-    "ggF_mmvv": 1,
-}
-# widths = [1, 5, 10, 15]
-# mass_range = (400, 1210, 10)
-# mass_range = (400, 410, 10)
+    f1_name = "/afs/cern.ch/work/d/ddenysiu/public/forXY/Int_llvv/test_llvv_LWA.root"
+    ch_names = {
+        "ggF_eevv": 0,
+        "ggF_mmvv": 1,
+    }
 
-widths = [5, 10, 15]
-mass_list = [400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1100, 1200]
-#widths = [1]
-#mass_list = [400]
+    # get template from Mariyan's input
+    # fin_temp = ROOT.TFile.Open("/afs/cern.ch/user/m/mpetrov/public/Combination_work_Updated/pdf_qqZZ_all.root")
+    # hist_temp = fin_temp.Get("mT-Nominal-ggF_eevv")
+    # hist_temp.SetDirectory(0)
+    # fin_temp.Close()
 
-# get template from Mariyan's input
-# fin_temp = ROOT.TFile.Open("/afs/cern.ch/user/m/mpetrov/public/Combination_work_Updated/pdf_qqZZ_all.root")
-# hist_temp = fin_temp.Get("mT-Nominal-ggF_eevv")
-# hist_temp.SetDirectory(0)
-# fin_temp.Close()
+    hist_temp = ROOT.TH1F("temp", "template", 30, 0., 1500.)
+    #xbins = [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 800, 950, 1500]
+    #hist_temp = ROOT.TH1F("temp", "template", len(xbins)-1, array.array('f', xbins))
 
-#hist_temp = ROOT.TH1F("temp", "template", 30, 0., 1500.)
-xbins = [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 800, 950, 1500]
-hist_temp = ROOT.TH1F("temp", "template", len(xbins)-1, array.array('f', xbins))
+    fin = ROOT.TFile.Open(f1_name)
+    tree = fin.Get("tree_NOMINAL_slim")
 
-fin = ROOT.TFile.Open(f1_name)
-tree = fin.Get("tree_NOMINAL_slim")
-
-cmp_dir = "compare_signal_int"
-if not os.path.exists(cmp_dir):
-    os.mkdir(cmp_dir)
+    cmp_dir = "compare_signal_int"
+    if not os.path.exists(cmp_dir):
+        os.mkdir(cmp_dir)
 
 norm_factor = 36.1 # lumonosity in pb-1
 #for mass in range(*mass_range):
