@@ -50,7 +50,7 @@ class Main:
         self.mass = mass
         self.width = width
 
-        self.make_ws(config_name)
+        self.make_ws()
         self.submit_limit()
 
     def process_NWA(self, mass):
@@ -60,20 +60,21 @@ class Main:
         self.make_ws()
         self.submit_limit()
 
-    def make_ws(self, config_name):
+    def make_ws(self):
         if os.path.isfile(self.get_ws_name()):
             print self.get_ws_name(),"is there"
             return
 
-        config_name = self.ws_handler.get_workspace_config(self.mass, self.width, not self.opt.noInt)
+        if hasattr(self, 'width'):
+            log_name = "log.make.mH{}.wH{}".format(self.mass, self.width)
+            config_name = self.ws_handler.get_workspace_config(self.mass, self.width, not self.opt.noInt)
+        else:
+            log_name = "log.make.mH{}".format(self.mass)
+            config_name = self.get_config_name()
+
         exe = ['mainCombiner', config_name]
         print exe
         output = subprocess.check_output(exe)
-
-        if hasattr(self, 'width'):
-            log_name = "log.make.mH{}.wH{}".format(self.mass, self.width)
-        else:
-            log_name = "log.make.mH{}".format(self.mass)
 
         with open(log_name, 'w') as f:
             f.write(output)
