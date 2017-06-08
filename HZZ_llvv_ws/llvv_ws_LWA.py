@@ -129,14 +129,15 @@ class llvv_ws_LWA:
         """
         out_text = "[{}]\n".format(self.get_section_name())
         out_text += "data = {}\n".format(self.get_yields_name())
-        out_text += "formula = mu*n_signal + sqrt(mu)*(n_HB+ n_hH) + n_ggZZ\n"
+        #out_text += "formula = mu*n_signal + sqrt(mu)*(n_HB+ n_hH) + n_ggZZ\n"
+        out_text += "formula = mu*n_signal + sqrt(mu)*(n_HB+ n_hH)\n"
         with open(self.get_coeff_name(), 'w') as f:
             f.write(out_text)
         print self.get_coeff_name(),"is written"
 
     # define common names for various inputs
     def get_coeff_name(self):
-        return 'coefIno_mH{}_wH{}.ini'.format(self.mass, self.width)
+        return 'coefInfo_mH{}_wH{}.ini'.format(self.mass, self.width)
 
     def get_input_hist_name(self):
         return 'ggH{}_wH{}.root'.format(self.mass, self.width)

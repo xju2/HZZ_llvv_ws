@@ -4,8 +4,7 @@
 import sys
 import os
 
-script_dir = os.path.join(os.path.dirname(os.path.abspath(os.path.realpath(__file__))), '..')
-sys.path.insert(0, os.path.abspath(script_dir))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(os.path.realpath(__file__))), '..')))
 
 from HZZ_llvv_ws import prepare_yield_inputs as pp
 from HZZ_llvv_ws.submit import BsubHandle
