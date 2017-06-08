@@ -41,9 +41,9 @@ def plot(mass, width, mu, lumi=36.1):
         h_HB = fin.Get(int_HB_name)
 
         # scale by luminosity and signal strength
-        h_sig.Scale(lumi*1000*mu)
-        h_hH.Scale(lumi*1000*math.sqrt(mu))
-        h_HB.Scale(lumi*1000*math.sqrt(mu))
+        h_sig.Scale(lumi*mu)
+        h_hH.Scale(lumi*math.sqrt(mu))
+        h_HB.Scale(lumi*math.sqrt(mu))
 
         sum_name = "mT_{}_Sum".format(ch_name)
         h_sum = h_sig.Clone(sum_name)
@@ -57,7 +57,8 @@ def plot(mass, width, mu, lumi=36.1):
             "out_folder": cmp_dir,
             "add_yields": True,
             "no_fill": True,
-            "out_name": "ggH{}_wH{}_{}_mu{}".format(mass, width, ch_name, mu)
+            "out_name": "ggH{}_wH{}_{}_mu{}".format(mass, width, ch_name, mu),
+            'label': "#mu = {:.4f}".format(mu)
         }
         ps.compare_hists(hist_list, tag_list, **options)
 
@@ -66,7 +67,7 @@ if __name__ == "__main__":
         print sys.argv[0],"mass width mu"
         exit(1)
 
-    mass = float(sys.argv[1])
-    width = float(sys.argv[2])
+    mass = int(sys.argv[1])
+    width = int(sys.argv[2])
     mu = float(sys.argv[3])
     plot(mass, width, mu)
