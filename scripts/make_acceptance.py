@@ -27,7 +27,7 @@ def plot_acceptance(width):
     for file_name in glob.glob("ggH*_wH{}.root".format(width)):
         mass = float(file_name.split('_')[0][3:])
         mass_list.append(mass)
-        xs_signal = xs.signal_xs(mass, width)
+        xs_signal = xs.signal_xs(mass, width) * 0.2/0.03365
 
         f1 = ROOT.TFile.Open(file_name)
         h_sig_ee = f1.Get("mT_ggF_eevv_signal")
