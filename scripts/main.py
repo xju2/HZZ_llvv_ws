@@ -35,13 +35,13 @@ class Main:
         if hasattr(self, 'width'):
             return "HZZ_STXS_llvv_mH{}_wH{}.ini".format(self.mass, self.width)
         else:
-            return "HZZ_STXS_llvv_mH{}.ini".format(self.mass)
+            return "config_files/HZZ_STXS_llvv_mH{}.ini".format(self.mass)
 
     def get_ws_name(self):
         if hasattr(self, 'width'):
             return 'combined_mH{}_wH{}.root'.format(self.mass, self.width)
         else:
-            return 'combined_mH{}.root'.format(self.mass)
+            return 'workspaces/combined_mH{}.root'.format(self.mass)
 
     def process_LWA(self, mass, width):
         print "producing mH {} and wH {}".format(mass, width)

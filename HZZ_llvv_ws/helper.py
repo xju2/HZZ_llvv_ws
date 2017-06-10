@@ -27,3 +27,20 @@ def get_sys(file_name):
             low, high = line.split('=')[1].split()
             sys_map[curr_section][sys_name] = (float(low), float(high))
     return sys_map
+
+def read_yield_input(file_name):
+    r"""Read the text file Yields
+    """
+    yields_dic = {}
+    categories = None
+    with open(file_name, 'r') as f:
+        iline = 0
+        for line in f:
+            if iline == 0:
+                categories = [x.strip() for x in line[:-1].split('&')]
+            else:
+                items = line.split('&')
+                yields_dic[items[0].strip()] = [float(x.strip()) for x in items[1:]]
+            iline += 1
+
+    return yields_dic,categories
