@@ -6,7 +6,7 @@ function do_test(){
 
 function run_all(){
     widths="1 5 10 15"
-    for ((mass=400; mass <=1200; mass+=50))
+    for ((mass=400; mass <=1200; mass+=10))
     do
         for width in $widths
         do

@@ -4,6 +4,7 @@ import ROOT
 import glob
 import math
 import subprocess
+import sys
 
 def is_one(line):
     if "=" in line:
@@ -28,7 +29,7 @@ def exchange(line):
         res = line
     return res
 
-def prune(file_name):
+def prune_norm_sys(file_name):
     out_text = ""
     with open(file_name) as f:
         for line in f:
@@ -91,10 +92,17 @@ def prune_shape_sys(file_name):
 
 
 if __name__ == "__main__":
-    for file_name in glob.glob("norm*_all.txt"):
-        print file_name
-        prune(file_name)
+
+    if len(sys.argv) < 2:
+        print sys.argv[0],"file_name"
+        exit(1)
+
+    file_name = sys.argv[1]
+    prune_norm_sys(file_name)
+    #for file_name in glob.glob("norm*_all.txt"):
+    #    print file_name
+    #    prune_norm_sys(file_name)
 
     #prune_shape_sys('test.root')
-    for file_name in glob.glob('sys*root'):
-        prune_shape_sys(file_name)
+    #for file_name in glob.glob('sys*root'):
+    #    prune_shape_sys(file_name)

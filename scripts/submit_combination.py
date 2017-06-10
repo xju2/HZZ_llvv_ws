@@ -72,7 +72,10 @@ class Combination:
     def process(self, mass, width):
         self.mass = mass
         self.width = width
-        self.bsub_handle.submit(self.comb_cmd())
+        if not os.path.exists(self.get_out_name()):
+            self.bsub_handle.submit(self.comb_cmd())
+        else:
+            print self.get_out_name(),"is there"
         self.bsub_handle.print_summary()
 
 if __name__ == "__main__":
