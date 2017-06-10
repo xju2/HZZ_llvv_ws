@@ -31,17 +31,32 @@ class Main:
         self.code_dir = "/afs/cern.ch/user/x/xju/work/combination/workspaceCombiner/"
         self.exe_limit = self.code_dir+"scripts/run_limit.sh"
 
+        # setup directories
+        pwd = os.path.dirname(os.path.abspath(__file__))
+        self.log_dir = os.path.join(pwd, 'Logs')
+        if not os.path.exists(self.log_dir):
+            os.mkdir(self.log_dir)
+        self.config_dir = os.path.join(pwd, 'config_files')
+        if not os.path.exists(self.config_dir):
+            os.mkdir(self.config_dir)
+        self.ws_dir = os.path.join(pwd, 'workspaces')
+        if not os.path.exists(self.ws_dir):
+            os.mkdir(self.ws_dir)
+
+
+
+
     def get_config_name(self):
         if hasattr(self, 'width'):
             return "HZZ_STXS_llvv_mH{}_wH{}.ini".format(self.mass, self.width)
         else:
-            return "config_files/HZZ_STXS_llvv_mH{}.ini".format(self.mass)
+            return "{}/HZZ_STXS_llvv_mH{}.ini".format(self.config_dir, self.mass)
 
     def get_ws_name(self):
         if hasattr(self, 'width'):
             return 'combined_mH{}_wH{}.root'.format(self.mass, self.width)
         else:
-            return 'workspaces/combined_mH{}.root'.format(self.mass)
+            return '{}/combined_mH{}.root'.format(self.ws_dir, self.mass)
 
     def process_LWA(self, mass, width):
         print "producing mH {} and wH {}".format(mass, width)
@@ -65,10 +80,10 @@ class Main:
             return
 
         if hasattr(self, 'width'):
-            log_name = "log.make.mH{}.wH{}".format(self.mass, self.width)
+            log_name = "Logs/log.make.mH{}.wH{}".format(self.mass, self.width)
             config_name = self.ws_handler.get_workspace_config(self.mass, self.width, not self.opt.noInt)
         else:
-            log_name = "log.make.mH{}".format(self.mass)
+            log_name = "{}/log.make.mH{}".format(self.log_dir, self.mass)
             config_name = self.get_config_name()
 
         exe = ['mainCombiner', config_name]
@@ -87,27 +102,27 @@ class Main:
             os.mkdir(out_dir)
 
         run_cmd = " ".join(
-            [self.exe_limit, ws_dir+"/"+self.get_ws_name(), 'combined', poi_name, 'obsData',
+            [self.exe_limit, os.path.abspath(self.get_ws_name()), 'combined', poi_name, 'obsData',
              fix_str, 'limit', 'obs,exp', out_dir, '1', other_poi]
         )
         return run_cmd
 
     def submit_limit(self):
-        ws_dir = os.path.dirname(os.path.abspath(__file__))
+        pwd = os.path.dirname(os.path.abspath(__file__))
 
         if hasattr(self, 'width'):
             fix_str = 'mH={},gamma={}'.format(self.mass, self.width)
-            out_dir = ws_dir+'/Limits'
-            self.bsub_handle.submit(self.get_limit_cmd(ws_dir, 'mu', fix_str, out_dir))
+            out_dir = pwd+'/Limits'
+            self.bsub_handle.submit(self.get_limit_cmd(pwd, 'mu', fix_str, out_dir))
         else:
             fix_str = 'mH={}'.format(self.mass)
             poi_name = "mu_ggF"
-            out_dir = ws_dir+'/ggF_Limits'
-            self.bsub_handle.submit(self.get_limit_cmd(ws_dir, poi_name, fix_str, out_dir, "0:0"))
+            out_dir = pwd+'/ggF_Limits'
+            self.bsub_handle.submit(self.get_limit_cmd(pwd, poi_name, fix_str, out_dir, "0:0"))
 
             poi_name = "mu_VBF"
-            out_dir = ws_dir+'/VBF_Limits'
-            self.bsub_handle.submit(self.get_limit_cmd(ws_dir, poi_name, fix_str, out_dir, "0:0"))
+            out_dir = pwd+'/VBF_Limits'
+            self.bsub_handle.submit(self.get_limit_cmd(pwd, poi_name, fix_str, out_dir, "0:0"))
 
 if __name__ == "__main__":
     usage = "%prog mass width"
