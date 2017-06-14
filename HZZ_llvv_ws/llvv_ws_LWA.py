@@ -173,7 +173,7 @@ class llvv_ws_LWA:
         filedata = filedata.replace("INPUTDIR", os.path.abspath(self.inputs_dir))
         filedata = filedata.replace("SECTIONAME", self.get_section_name())
         filedata = filedata.replace("INPUTNAME", os.path.basename(self.get_input_hist_name()))
-        filedata = filedata.replace("COEFF", self.get_coeff_name())
+        filedata = filedata.replace("COEFF", os.path.basename(self.get_coeff_name()))
 
         with open(self.get_config_name(), 'w') as f:
             f.write(filedata)
