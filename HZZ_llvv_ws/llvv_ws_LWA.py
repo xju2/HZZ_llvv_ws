@@ -4,6 +4,8 @@ import os
 import sys
 
 import ROOT
+import helper
+
 class llvv_ws_LWA:
     r"""prepare the inputs for making the interference workspace.
     """
@@ -24,6 +26,14 @@ class llvv_ws_LWA:
         self.lumi = 36.1
         self.mm_ch_name = "ggF_mmvv"
         self.ee_ch_name = 'ggF_eevv'
+
+        # book directories
+        self.config_dir = "config"
+        helper.check_dir(self.config_dir)
+        self.ws_dir = 'workspaces'
+        helper.check_dir(self.ws_dir)
+        self.inputs_dir = 'inputs'
+        helper.check_dir(self.inputs_dir)
 
         # to be define in the fly
         self.mass = -1
@@ -137,19 +147,19 @@ class llvv_ws_LWA:
 
     # define common names for various inputs
     def get_coeff_name(self):
-        return 'coefInfo_mH{}_wH{}.ini'.format(self.mass, self.width)
+        return os.path.join(self.inputs_dir, 'coefInfo_mH{}_wH{}.ini'.format(self.mass, self.width))
 
     def get_input_hist_name(self):
-        return 'ggH{}_wH{}.root'.format(self.mass, self.width)
+        return os.path.join(self.inputs_dir, 'ggH{}_wH{}.root'.format(self.mass, self.width))
 
     def get_section_name(self):
         return 'sbiFormula_mH{}_wH{}'.format(self.mass, self.width)
 
     def get_config_name(self):
-        return "HZZ_STXS_llvv_mH{}_wH{}.ini".format(self.mass, self.width)
+        return os.path.join(self.config_dir, "HZZ_STXS_llvv_mH{}_wH{}.ini".format(self.mass, self.width))
 
     def get_yields_name(self):
-        return "normed_yields_ggH{}_wH{}.txt".format(self.mass, self.width)
+        return os.path.join(self.inputs_dir, "normed_yields_ggH{}_wH{}.txt".format(self.mass, self.width))
 
     # produce the configuration file for LWA with interference
     def config_files_LWA(self):
@@ -160,8 +170,9 @@ class llvv_ws_LWA:
         with open(self.template, 'r') as f:
             filedata = f.read()
 
+        filedata = filedata.replace("INPUTDIR", os.path.abspath(self.inputs_dir))
         filedata = filedata.replace("SECTIONAME", self.get_section_name())
-        filedata = filedata.replace("INPUTNAME", self.get_input_hist_name())
+        filedata = filedata.replace("INPUTNAME", os.path.basename(self.get_input_hist_name()))
         filedata = filedata.replace("COEFF", self.get_coeff_name())
 
         with open(self.get_config_name(), 'w') as f:
@@ -175,6 +186,7 @@ class llvv_ws_LWA:
         with open(self.template_no_int, 'r') as f:
             filedata = f.read()
 
+        filedata = filedata.replace("INPUTDIR", os.path.abspath(self.inputs_dir))
         filedata = filedata.replace("YIELDS", 'n_signal,{}'.format(self.get_yields_name()))
         filedata = filedata.replace("INPUTNAME", self.get_input_hist_name())
 

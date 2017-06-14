@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 def get_sys(file_name):
     """
@@ -44,3 +45,7 @@ def read_yield_input(file_name):
             iline += 1
 
     return yields_dic,categories
+
+def check_dir(dir_name):
+    if not os.path.exists(dir_name):
+        os.mkdir(dir_name)

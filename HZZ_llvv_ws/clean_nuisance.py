@@ -6,39 +6,49 @@ import math
 import subprocess
 import sys
 
-def is_one(line):
-    if "=" in line:
-        items = line[:-1].split('=')
-        up,down = items[1].split()
-        if abs(float(up)) == 1.:
-            return True
-    return False
-
 def is_lumi(line):
     return "ATLAS_lumi" in line
 
-def exchange(line):
+def regularize(line):
     if "=" in line:
         items = line[:-1].split('=')
         down,up = items[1].split()
-        if float(down) > 1.0 and float(up) < 1.0:
-            res = "{} = {} {}\n".format(items[0], up, down)
-        else:
-            res = line
+
+        down, up = check(float(down), float(up))
+        if down is None:
+            return None
+        res = "{} = {} {}\n".format(items[0], down, up)
     else:
         res = line
     return res
+
+def check(down, up):
+    if down > 1. and up > 1.:
+        up = max([down, up])
+        return (2.-up, up)
+    elif down > 1. and up < 1.:
+        return (up, down)
+    elif down > 1. and up == 1.:
+        return (2.-down, down)
+    elif down == 1. and up == 1.:
+        return (None, None)
+    elif down == 1. and up < 1.:
+        return (up, 2-up)
+    elif down < 1. and up < 1.:
+        down = min([down, up])
+        return (down, 2-down)
+    else:
+        return (down, up)
 
 def prune_norm_sys(file_name):
     out_text = ""
     with open(file_name) as f:
         for line in f:
-            if is_one(line):
-                continue
             if is_lumi(line):
                 continue
-            line = exchange(line)
-            out_text += line
+            line = regularize(line)
+            if line:
+                out_text += line
 
     with open(file_name, 'w') as f:
         f.write(out_text)
