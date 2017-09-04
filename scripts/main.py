@@ -36,7 +36,7 @@ class Main:
         self.log_dir = os.path.join(pwd, 'Logs')
         if not os.path.exists(self.log_dir):
             os.mkdir(self.log_dir)
-        self.config_dir = os.path.join(pwd, 'config_files')
+        self.config_dir = os.path.join(pwd, 'config')
         if not os.path.exists(self.config_dir):
             os.mkdir(self.config_dir)
         self.ws_dir = os.path.join(pwd, 'workspaces')
@@ -54,7 +54,7 @@ class Main:
 
     def get_ws_name(self):
         if hasattr(self, 'width'):
-            return 'combined_mH{}_wH{}.root'.format(self.mass, self.width)
+            return '{}/combined_mH{}_wH{}.root'.format(self.ws_dir, self.mass, self.width)
         else:
             return '{}/combined_mH{}.root'.format(self.ws_dir, self.mass)
 

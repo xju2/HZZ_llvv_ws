@@ -18,7 +18,7 @@ def plot(mass, width, mu, lumi=36.1):
     ----------
     mu: signal strength
     """
-    in_name = "ggH"+str(mass)+"_wH"+str(width)+".root"
+    in_name = "inputs/ggH"+str(mass)+"_wH"+str(width)+".root"
     if not os.path.exists(in_name):
         print in_name,"not there"
         return
